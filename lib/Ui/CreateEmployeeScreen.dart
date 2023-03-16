@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:leave_management/Model/EmployeeModel.dart';
+import 'package:leave_management/Utils/DataRepo.dart';
+import 'package:leave_management/Utils/Toast.dart';
 
 class CreateEmployeeScreen extends StatefulWidget {
   const CreateEmployeeScreen({Key? key}) : super(key: key);
@@ -22,26 +25,58 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
   TextEditingController casualLeaveContController = new TextEditingController();
   TextEditingController marriageLeaveCountController = new TextEditingController();
 
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomSheet: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        child: Container(
-          height: 50,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: Color(0xfffc153b),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0),
-            child: Center(
-              child: Text(
-                "Create Employee",
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                    fontSize: 18),
+        child: InkWell(
+          onTap: (){
+            if(firstNameController.text.isEmpty||middleNameController.text.isEmpty||
+            lastNameController.text.isEmpty||emailController.text.isEmpty||
+            phnController.text.isEmpty||sickLeaveCountController.text.isEmpty||
+            casualLeaveContController.text.isEmpty||marriageLeaveCountController.text.isEmpty||
+            usernameController.text.isEmpty||passwordController.text.isEmpty||
+            confirmPasswordController.text.isEmpty){
+              Toast.show("Enter all fields", context);
+            }
+            else if(passwordController.text != confirmPasswordController.text){
+              Toast.show("Passwords does not match", context);
+            }
+            else{
+              EmployeeModel employeeModel = new EmployeeModel();
+              employeeModel.firstName = firstNameController.text;
+              employeeModel.middleName = middleNameController.text;
+              employeeModel.lastName = lastNameController.text;
+              employeeModel.email = emailController.text;
+              employeeModel.phno = phnController.text;
+              employeeModel.userName = usernameController.text;
+              employeeModel.password = passwordController.text;
+              employeeModel.sickLeaveCount = sickLeaveCountController.text;
+              employeeModel.casualLeaveCount = casualLeaveContController.text;
+              employeeModel.marriageLeaveCount = marriageLeaveCountController.text;
+              createEmployee(employeeModel,context);
+            }
+          },
+          child: isLoading?
+          CircularProgressIndicator(color: Colors.black,):Container(
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: Color(0xfffc153b),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: Center(
+                child: Text(
+                  "Create Employee",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                      fontSize: 18),
+                ),
               ),
             ),
           ),
@@ -393,5 +428,35 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
         ),
       ),
     );
+  }
+
+
+  void createEmployee(EmployeeModel employeeModel,BuildContext context){
+
+    DataRepo().addEmployee(employeeModel).then((value) {
+
+      isLoading = false;
+      setState(() {
+
+      });
+
+      employeeModel.employeeId=value.id;
+
+      if (employeeModel.employeeId!.isNotEmpty){
+
+        Toast.show("Employee created successfully", context);
+       Navigator.of(context).pop();
+
+        DataRepo().updateEmployee(employeeModel);
+        // Navigator.of(context).push(MaterialPageRoute(
+        //     builder: (BuildContext context) =>
+        //         LoginPage()));
+
+      }else{
+        Toast.show('Registration failed.',context);
+
+      }
+    });
+
   }
 }

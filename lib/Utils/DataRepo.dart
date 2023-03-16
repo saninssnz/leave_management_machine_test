@@ -88,7 +88,7 @@ class DataRepo {
   // }
 
 
-  Future<DocumentReference> addUser(EmployeeModel employeeModel) {
+  Future<DocumentReference> addEmployee(EmployeeModel employeeModel) {
     return employeeCollection.add(employeeModel.toJson());
   }
 
@@ -100,11 +100,11 @@ class DataRepo {
   //   await issueCollection.doc(issueDetailsModel.issueId).update(issueDetailsModel.toJson());
   // }
   // // 4
-  // Future updateUser(UserModel userModel) async {
-  //   print(userModel.email.toString()+userModel.userId.toString());
-  //   await employeeCollection.doc(userModel.userId).update(userModel.toJson());
-  //
-  // }
+  Future updateEmployee(EmployeeModel employeeModel) async {
+    // print(userModel.email.toString()+userModel.userId.toString());
+    await employeeCollection.doc(employeeModel.employeeId).update(employeeModel.toJson());
+
+  }
   //
   // Future<DocumentReference> saveStaffAttendance(StaffAttendanceModel staffAttendanceModel) {
   //   return staffAttendanceCollection.add(staffAttendanceModel.toJson());

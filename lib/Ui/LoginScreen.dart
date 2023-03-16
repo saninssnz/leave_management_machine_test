@@ -1,7 +1,12 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:leave_management/Model/EmployeeModel.dart';
 import 'package:leave_management/Ui/AdminDashboard.dart';
 import 'package:leave_management/Ui/EmployeeDashboard.dart';
+import 'package:leave_management/Utils/DataRepo.dart';
 import 'package:leave_management/Utils/Toast.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -16,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController usernameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
+
+  bool isLoading = false;
 
 
   @override
@@ -36,15 +43,54 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (usernameController.text == "admin" &&
                     passwordController.text == "123") {
                   Navigator.of(context)
-                      .push(MaterialPageRoute(
-                      builder: (context) => widget.isAdmin?
-                      AdminDashboard():
-                      EmployeeScreen()
+                      .pushReplacement(MaterialPageRoute(
+                      builder: (context) => AdminDashboard()
                   ));
                 }
                 else{
                   Toast.show("Wrong username or password", context);
                 }
+              }
+              else{
+                isLoading = true;
+
+                setState(() {
+
+                });
+                List<DocumentSnapshot> docs;
+
+                DataRepo.employeeCollection
+                    .where("userName", isEqualTo: usernameController.text)
+                    .get()
+                    .then((query) async {
+
+                  isLoading = false;
+                  setState(() {
+
+                  });
+
+                  docs = query.docs;
+                  if (docs.length > 0) {
+                    EmployeeModel employeeModel =
+                    EmployeeModel.fromSnapshot(docs[0]);
+
+                    if(employeeModel.password == passwordController.text){
+                      final String userJson = employeeModelToJson(employeeModel);
+
+                      DataRepo().updateEmployee(employeeModel);
+                      Toast.show("Welcome", context);
+
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              EmployeeScreen()));
+                    }else{
+                      Toast.show("Invalid Password", context);
+                    }
+
+                  } else {
+                    Toast.show("User not found", context);
+                  }
+                });
               }
             }
           },
@@ -157,7 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
 
               SizedBox(
-                height: 20,),
+                height: 50,),
             ],
           ),
         ),
