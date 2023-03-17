@@ -7,7 +7,9 @@ import 'package:leave_management/Model/EmployeeModel.dart';
 import 'package:leave_management/Ui/AdminDashboard.dart';
 import 'package:leave_management/Ui/EmployeeDashboard.dart';
 import 'package:leave_management/Utils/DataRepo.dart';
+import 'package:leave_management/Utils/Provider.dart';
 import 'package:leave_management/Utils/Toast.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen(this.isAdmin);
@@ -73,6 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (docs.length > 0) {
                     EmployeeModel employeeModel =
                     EmployeeModel.fromSnapshot(docs[0]);
+
+                    Provider.of<DataProvider>(context, listen: false).setEmployeeDetails(context,employeeModel);
 
                     if(employeeModel.password == passwordController.text){
                       final String userJson = employeeModelToJson(employeeModel);
