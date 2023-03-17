@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:leave_management/Model/StatusModel.dart';
+import 'package:leave_management/Utils/Toast.dart';
 import 'package:leave_management/Utils/Utils.dart';
 
 class LeaveScreen extends StatefulWidget {
@@ -12,7 +13,9 @@ class _LeaveScreenState extends State<LeaveScreen> {
 
   LeaveTypeModel selectedLeaveTypeModel = LeaveTypeModel();
   DateTime selectedDate = DateTime.now();
-  List<String>dateList = [];
+  DateTime fromDate = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0,0);
+  DateTime toDate = DateTime.now();
+  TextEditingController reasonController = new TextEditingController();
 
   @override
   void initState() {
@@ -22,6 +25,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
 
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -34,37 +38,118 @@ class _LeaveScreenState extends State<LeaveScreen> {
       ),
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
               height: 30,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: Text("Select Date",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15
+              ),),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Select Dates",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15
-                  ),),
-                  InkWell(
-                    onTap: (){
-                      selectDate(context,selectedDate).then((value){
-                        selectedDate = DateTime(value!.year,value.month,value.day,0,0,0,0);
-                        dateList.add(selectedDate.toString());
-
-                        setState(() {});
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                  Material(
+                    borderRadius: BorderRadius.circular(5),
+                    elevation: 1,
+                    color: Colors.white,
+                    child: InkWell(
+                      onTap: (){
+                        selectDate(context,fromDate).then((value){
+                          if(fromDate==value||toDate==value){
+                            Toast.show("Date already picked", context);
+                          }
+                          else{
+                            fromDate = DateTime(value!.year,value.month,value.day,0,0,0,0);
+                          }
+                          setState(() {});
+                        });
+                      },
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 5.0),
-                        child: Icon(
-                          Icons.calendar_month,
-                          color: Color(0xff0C305A),
-                          size: 20,
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              "From:  ",
+                              style: TextStyle(
+                                  color: Color(0xff0C305A),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              fromDate.toString().split(" ")[0],
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: Icon(
+                                Icons.calendar_month,
+                                color: Color(0xff0C305A),
+                                size: 20,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Material(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.white,
+                    elevation: 1,
+                    child: InkWell(
+                      onTap: (){
+                        selectDate(context, toDate).then((value){
+                          if(toDate==value|| fromDate==value){
+                            Toast.show("Date already picked", context);
+                          }
+                          else{
+                            toDate = DateTime(value!.year,value.month,value.day,0,0,0,0);
+                          }
+                          setState(() {});
+                        });
+
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              "To:  ",
+                              style: TextStyle(
+                                  color: Color(0xff0C305A),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              toDate.toString().split(" ")[0],
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: Icon(
+                                Icons.calendar_month,
+                                color: Color(0xff0C305A),
+                                size: 20,
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     ),
@@ -73,78 +158,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
               ),
             ),
             SizedBox(
-              height: 10,
-            ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 40,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemCount: dateList.length,
-                itemBuilder: (context, index) {
-                  return Row(
-                    children: [
-                      Stack(
-                        children: [
-                          Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            elevation: 1,
-                            color: Colors.white,
-                            child: Container(
-                              height: 30,
-                              width: 90,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      selectedDate.toString().split(" ")[0],
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.green),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 80.0),
-                            child: InkWell(
-                              onTap: (){
-                                dateList.remove(dateList[index]);
-                                setState(() {
-
-                                });
-                              },
-                              child: Container(
-                                height: 15,
-                                width: 15,
-                                child: Icon(Icons.close,size: 12,
-                                color: Colors.white,),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: Colors.red
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ),
-
-            SizedBox(
-              height: 20,
+              height: 30,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -205,7 +219,68 @@ class _LeaveScreenState extends State<LeaveScreen> {
         )
                 ],
               ),
-            )
+            ),
+            SizedBox(height: 30,),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: Text("Reason",
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold
+                ),),
+            ),
+            SizedBox(height: 10,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: TextField(
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+                maxLines: null,
+                minLines: 1,
+                textAlign: TextAlign.start,
+                controller: reasonController,
+                cursorColor: Colors.black,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    borderSide: BorderSide(
+                      width: 1,
+                      style: BorderStyle.none,
+                    ),
+                  ),
+                  fillColor: Colors.white,
+                  alignLabelWithHint: true,
+                  hintText: ("Enter reason"),
+                  hintStyle: TextStyle(
+                      color: Colors.grey, fontSize: 15, fontWeight: FontWeight.w400),
+                ),
+              ),
+            ),
+            SizedBox(height: 30,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Color(0xfffc153b),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Center(
+                    child: Text(
+                      "Send Request",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                          fontSize: 18),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -215,9 +290,9 @@ class _LeaveScreenState extends State<LeaveScreen> {
   Future<DateTime?> selectDate(BuildContext context, DateTime _date) async {
     final DateTime? picked = await showDatePicker(
         context: context,
-        initialDate: _date,
-        firstDate: DateTime(2000),
-        lastDate: DateTime.now(),
+        initialDate: DateTime.now(),
+        firstDate: DateTime.now(),
+        lastDate: DateTime(2100),
         initialEntryMode: DatePickerEntryMode.calendarOnly,
         builder: (context, child) {
           return Theme(

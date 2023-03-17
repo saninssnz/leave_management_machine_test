@@ -61,7 +61,8 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
             }
           },
           child: isLoading?
-          CircularProgressIndicator(color: Colors.black,):Container(
+          CircularProgressIndicator(color: Colors.black,):
+          Container(
             height: 50,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
