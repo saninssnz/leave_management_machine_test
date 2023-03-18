@@ -9,6 +9,9 @@ import 'package:leave_management/Utils/Utils.dart';
 import 'package:provider/provider.dart';
 
 class AdminLeaveScreen extends StatefulWidget {
+  AdminLeaveScreen(this.leaveFormModel);
+
+  LeaveFormModel leaveFormModel = LeaveFormModel();
 
   @override
   _AdminLeaveScreenState createState() => _AdminLeaveScreenState();
@@ -17,11 +20,11 @@ class AdminLeaveScreen extends StatefulWidget {
 class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
 
   LeaveTypeModel selectedLeaveTypeModel = LeaveTypeModel();
-  LeaveFormModel leaveFormModel = LeaveFormModel();
-  DateTime selectedDate = DateTime.now();
-  DateTime fromDate = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0,0);
-  DateTime toDate = DateTime.now();
-  TextEditingController reasonController = new TextEditingController();
+  // LeaveFormModel leaveFormModel = LeaveFormModel();
+  // DateTime selectedDate = DateTime.now();
+  // DateTime fromDate = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0,0);
+  // DateTime toDate = DateTime.now();
+  // TextEditingController reasonController = new TextEditingController();
 
   @override
   void initState() {
@@ -39,7 +42,7 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
       appBar: AppBar(
         backgroundColor: Color(0xff2a2a2a),
         title: Text(
-            "Request Leave"
+            "Leave Request"
         ),
       ),
       body: SafeArea(
@@ -51,7 +54,7 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: Text("Select Date",
+              child: Text("Dates",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15
@@ -69,41 +72,33 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
                     borderRadius: BorderRadius.circular(5),
                     elevation: 1,
                     color: Colors.white,
-                    child: InkWell(
-                      onTap: (){
-                        selectFromDate(context,fromDate).then((value){
-                          fromDate = DateTime(value!.year,value.month,value.day,0,0,0,0);
-                          setState(() {});
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              "From:  ",
-                              style: TextStyle(
-                                  color: Color(0xff0C305A),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              fromDate.toString().split(" ")[0],
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5.0),
-                              child: Icon(
-                                Icons.calendar_month,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            "From:  ",
+                            style: TextStyle(
                                 color: Color(0xff0C305A),
-                                size: 20,
-                              ),
-                            )
-                          ],
-                        ),
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            widget.leaveFormModel.fromDate.toString().split(" ")[0],
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5.0),
+                            child: Icon(
+                              Icons.calendar_month,
+                              color: Color(0xff0C305A),
+                              size: 20,
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ),
@@ -111,51 +106,115 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
                     borderRadius: BorderRadius.circular(5),
                     color: Colors.white,
                     elevation: 1,
-                    child: InkWell(
-                      onTap: (){
-                        selectToDate(context, toDate).then((value){
-                          toDate = DateTime(value!.year,value.month,value.day,0,0,0,0);
-                          setState(() {});
-                        });
-
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              "To:  ",
-                              style: TextStyle(
-                                  color: Color(0xff0C305A),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              toDate.toString().split(" ")[0],
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5.0),
-                              child: Icon(
-                                Icons.calendar_month,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            "To:  ",
+                            style: TextStyle(
                                 color: Color(0xff0C305A),
-                                size: 20,
-                              ),
-                            )
-                          ],
-                        ),
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            widget.leaveFormModel.toDate.toString().split(" ")[0],
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5.0),
+                            child: Icon(
+                              Icons.calendar_month,
+                              color: Color(0xff0C305A),
+                              size: 20,
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ),
                 ],
               ),
             ),
+
             SizedBox(
               height: 30,
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Leave Type: ",
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold
+                    ),),
+                  Container(
+                      decoration: BoxDecoration(
+                        color: Colors.teal,
+                        borderRadius: BorderRadius.circular(5),
+                        // border: Border.all(color: Colors.black, width: 1)
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(widget.leaveFormModel.leaveType.toString(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            )
+                        ),
+                      )
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: Text("Reason",
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold
+                ),),
+            ),
+            SizedBox(height: 10,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: TextField(
+                enabled: false,
+                readOnly: true,
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+                maxLines: null,
+                minLines: 1,
+                textAlign: TextAlign.start,
+                controller: TextEditingController(text:widget.leaveFormModel.reason.toString()),
+                cursorColor: Colors.black,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    borderSide: BorderSide(
+                      width: 1,
+                      style: BorderStyle.none,
+                    ),
+                  ),
+                  fillColor: Colors.white,
+                  alignLabelWithHint: true,
+                  hintText: ("Enter reason"),
+                  hintStyle: TextStyle(
+                      color: Colors.grey, fontSize: 15, fontWeight: FontWeight.w400),
+                ),
+              ),
+            ),
+            SizedBox(height: 30,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Row(
@@ -216,70 +275,14 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
                 ],
               ),
             ),
+
             SizedBox(height: 30,),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: Text("Reason",
-                style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold
-                ),),
-            ),
-            SizedBox(height: 10,),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: TextField(
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-                maxLines: null,
-                minLines: 1,
-                textAlign: TextAlign.start,
-                controller: reasonController,
-                cursorColor: Colors.black,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(
-                      width: 1,
-                      style: BorderStyle.none,
-                    ),
-                  ),
-                  fillColor: Colors.white,
-                  alignLabelWithHint: true,
-                  hintText: ("Enter reason"),
-                  hintStyle: TextStyle(
-                      color: Colors.grey, fontSize: 15, fontWeight: FontWeight.w400),
-                ),
-              ),
-            ),
-            SizedBox(height: 30,),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: InkWell(
                 onTap: (){
-                  if(reasonController.text.isEmpty){
-                    Toast.show("Enter reason", context);
-                  }
-                  else {
-                    leaveFormModel.fromDate = fromDate.toString();
-                    leaveFormModel.toDate = toDate.toString();
-                    leaveFormModel.leaveType = selectedLeaveTypeModel.type;
-                    leaveFormModel.reason = reasonController.text;
-                    leaveFormModel.employeeName = Provider
-                        .of<DataProvider>
-                      (context, listen: false)
-                        .employeeModel
-                        .firstName;
-                    leaveFormModel.employeeId = Provider
-                        .of<DataProvider>
-                      (context, listen: false)
-                        .employeeModel
-                        .employeeId;
-                    leaveFormModel.status = "Pending";
-                    addIssue();
-                  }
+
                 },
                 child: Container(
                   height: 50,
@@ -291,7 +294,7 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Center(
                       child: Text(
-                        "Send Request",
+                        "Update",
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             color: Colors.white,
@@ -306,61 +309,5 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
         ),
       ),
     );
-  }
-
-  Future<DateTime?> selectFromDate(BuildContext context, DateTime _date) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2100),
-        initialEntryMode: DatePickerEntryMode.calendarOnly,
-        builder: (context, child) {
-          return Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: ColorScheme.light(
-                  primary: Colors.lightBlue.shade900, // header background color
-                  onPrimary: Colors.white, // header text color
-                  onSurface: Colors.lightBlue.shade900, // body text color
-                ),
-              ),
-              child: child!);
-        });
-
-    return picked;
-  }
-  Future<DateTime?> selectToDate(BuildContext context, DateTime _date) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2100),
-        initialEntryMode: DatePickerEntryMode.calendarOnly,
-        builder: (context, child) {
-          return Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: ColorScheme.light(
-                  primary: Colors.lightBlue.shade900, // header background color
-                  onPrimary: Colors.white, // header text color
-                  onSurface: Colors.lightBlue.shade900, // body text color
-                ),
-              ),
-              child: child!);
-        });
-
-    return picked;
-  }
-
-  addIssue() {
-    leaveFormModel.createdOn = Timestamp.now();
-    DataRepo().addLeaveRequest(leaveFormModel).then((value) {
-      leaveFormModel.id = value.id;
-      DataRepo().updateLeaveRequest(leaveFormModel);
-      Navigator.of(context).pop();
-      Toast.show("Leave requested successfully", context);
-    });
-    setState(() {
-    });
-
   }
 }
