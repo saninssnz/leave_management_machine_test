@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:leave_management/Model/LeaveFormModel.dart';
-import 'package:leave_management/Ui/AdminLeaveScreen.dart';
+import 'package:leave_management/Ui/Admin/AdminLeaveScreen.dart';
 import 'package:leave_management/Utils/DataRepo.dart';
 import 'package:leave_management/Utils/Provider.dart';
 import 'package:provider/provider.dart';
@@ -50,6 +50,7 @@ class _AdminNotificationScreenState extends State<AdminNotificationScreen> {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: InkWell(
               onTap: (){
+                leaveFormModel.isAdminRead = true;
                 DataRepo().updateLeaveRequest(leaveFormModel);
                 if (mounted) {
                   setState(() {});

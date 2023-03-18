@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:leave_management/Ui/SplashScreen.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,7 @@ import 'Utils/Provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await FirebaseMessaging.instance.getInitialMessage();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<DataProvider>(create: (context) => DataProvider()),
   ], child:MyApp()));

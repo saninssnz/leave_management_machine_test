@@ -19,8 +19,11 @@ class LeaveFormModel {
   String? lstName;
   String? employeeId;
   String? casualLeaveCount;
-  String? sickLeaveCounr;
+  String? sickLeaveCount;
   String? mrgLeaveCount;
+  String? oldCasualLeaveCount;
+  String? oldmrgLeaveCount;
+  String? oldsickLeaveCount;
   String? email;
   String? usrName;
   String? password;
@@ -46,13 +49,16 @@ class LeaveFormModel {
         this.employeeId,
         this.isAdminRead,
         this.isUserRead,
-        this.sickLeaveCounr,
+        this.sickLeaveCount,
         this.mrgLeaveCount,
         this.casualLeaveCount,
         this.email,
         this.fstName,
         this.mdlName,
         this.lstName,
+        this.oldsickLeaveCount,
+        this.oldmrgLeaveCount,
+        this.oldCasualLeaveCount,
       });
 
   factory LeaveFormModel.fromJson(Map<String, dynamic> json) {
@@ -74,12 +80,15 @@ class LeaveFormModel {
       createdOn: json['createdOn'],
       status: json['status'],
       employeeId: json['employeeId'],
-      sickLeaveCounr: json['sickLeaveCounr'],
+      sickLeaveCount: json['sickLeaveCounr'],
       mrgLeaveCount: json['mrgLeaveCount'],
       casualLeaveCount: json['casualLeaveCount'],
       email: json['email'],
-      isAdminRead: false,
-      isUserRead: false,
+      isAdminRead: json['isAdminRead'],
+      isUserRead: json['isUserRead'],
+      oldCasualLeaveCount: json['oldLasualLeaveCount'],
+      oldmrgLeaveCount: json['oldmrcasualLeaveCount'],
+      oldsickLeaveCount: json['oldsickLeaveCount'],
     );
   }
 
@@ -99,12 +108,15 @@ class LeaveFormModel {
     'employeeId': employeeId,
     'isAdminRead': isAdminRead,
     'isUserRead': isUserRead,
-    'sickLeaveCounr': sickLeaveCounr,
+    'sickLeaveCounr': sickLeaveCount,
     'mrgLeaveCount': mrgLeaveCount,
     'casualLeaveCount': casualLeaveCount,
     'fstName': fstName,
     'mdlName': mdlName,
     'lstName': lstName,
+    'oldmrgLeaveCount': oldmrgLeaveCount,
+    'oldsickLeaveCount': oldsickLeaveCount,
+    'oldCasualLeaveCount': oldCasualLeaveCount,
   };
 
   factory LeaveFormModel.fromSnapshot(DocumentSnapshot snapshot) {

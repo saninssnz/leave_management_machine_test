@@ -19,12 +19,14 @@ class _LeaveScreenState extends State<LeaveScreen> {
   LeaveTypeModel selectedLeaveTypeModel = LeaveTypeModel();
   LeaveFormModel leaveFormModel = LeaveFormModel();
   DateTime selectedDate = DateTime.now();
-  DateTime fromDate = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0,0);
-  DateTime toDate = DateTime.now();
+  DateTime? fromDate;
+  DateTime? toDate;
   TextEditingController reasonController = new TextEditingController();
+  List<LeaveFormModel> list =[];
 
   @override
   void initState() {
+
     selectedLeaveTypeModel.type = "Casual Leave";
 
     setState(() {});
@@ -71,8 +73,9 @@ class _LeaveScreenState extends State<LeaveScreen> {
                     color: Colors.white,
                     child: InkWell(
                       onTap: (){
-                        selectFromDate(context,fromDate).then((value){
-                            fromDate = DateTime(value!.year,value.month,value.day,0,0,0,0);
+                        selectDate(context).then((value){
+                              fromDate = DateTime(value!.year,value.month,value.day,0,0,0,0);
+
                           setState(() {});
                         });
                       },
@@ -87,8 +90,8 @@ class _LeaveScreenState extends State<LeaveScreen> {
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold),
                             ),
-                            Text(
-                              fromDate.toString().split(" ")[0],
+                            Text(null!=fromDate?
+                              fromDate.toString().split(" ")[0]:"",
                               style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
@@ -113,8 +116,9 @@ class _LeaveScreenState extends State<LeaveScreen> {
                     elevation: 1,
                     child: InkWell(
                       onTap: (){
-                        selectToDate(context, toDate).then((value){
-                            toDate = DateTime(value!.year,value.month,value.day,0,0,0,0);
+                        selectDate(context).then((value){
+                          toDate = DateTime(value!.year,value.month,value.day,0,0,0,0);
+
                           setState(() {});
                         });
 
@@ -130,8 +134,8 @@ class _LeaveScreenState extends State<LeaveScreen> {
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold),
                             ),
-                            Text(
-                              toDate.toString().split(" ")[0],
+                            Text(null!=toDate?
+                              toDate.toString().split(" ")[0]:"",
                               style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
@@ -259,100 +263,112 @@ class _LeaveScreenState extends State<LeaveScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: InkWell(
                 onTap: (){
-                  int daysBetween = (toDate.difference(fromDate).inHours / 24).round();
-                  if(reasonController.text.isEmpty){
-                    Toast.show("Enter reason", context);
+                  if(null==fromDate){
+                    Toast.show("Select from date", context);
                   }
-                  else if(selectedLeaveTypeModel.type == "Casual Leave" &&
-                      (daysBetween>int.parse(Provider.of<DataProvider>(context, listen: false)
-                          .employeeModel.casualLeaveCount!))){
-
-                      Toast.show("You dont have enough casual leaves left", context);
-
-                  }
-                  else if(selectedLeaveTypeModel.type == "Marriage Leave" &&
-                      (daysBetween>int.parse(Provider.of<DataProvider>(context, listen: false)
-                          .employeeModel.marriageLeaveCount!))){
-
-                      Toast.show("You dont have enough marriage leaves left", context);
-
-                  }
-                  else if(selectedLeaveTypeModel.type == "Sick Leave" &&
-                      (daysBetween>int.parse(Provider.of<DataProvider>(context, listen: false)
-                          .employeeModel.sickLeaveCount!))){
-
-                      Toast.show("You dont have enough sick leaves left", context);
-
+                  else if(null==toDate){
+                    Toast.show("Select to date", context);
                   }
                   else {
-                    leaveFormModel.fromDate = fromDate.toString();
-                    leaveFormModel.toDate = toDate.toString();
-                    leaveFormModel.leaveType = selectedLeaveTypeModel.type;
-                    leaveFormModel.reason = reasonController.text;
-                    leaveFormModel.employeeName = Provider
-                        .of<DataProvider>
-                      (context, listen: false)
-                        .employeeModel
-                        .firstName;
-                    leaveFormModel.employeeId = Provider
-                        .of<DataProvider>
-                      (context, listen: false)
-                        .employeeModel
-                        .employeeId;
-                    leaveFormModel.status = "Pending";
-                    leaveFormModel.isAdminRead = false;
-                    leaveFormModel.casualLeaveCount = Provider
-                        .of<DataProvider>
-                      (context, listen: false)
-                        .employeeModel
-                        .casualLeaveCount;
-                    leaveFormModel.mrgLeaveCount = Provider
-                        .of<DataProvider>
-                      (context, listen: false)
-                        .employeeModel
-                        .marriageLeaveCount;
-                    leaveFormModel.sickLeaveCounr = Provider
-                        .of<DataProvider>
-                      (context, listen: false)
-                        .employeeModel
-                        .sickLeaveCount;
+                    int daysBetween = (toDate!.difference(fromDate!).inHours /
+                        24).round();
+                    if (reasonController.text.isEmpty) {
+                      Toast.show("Enter reason", context);
+                    }
+                    else if (selectedLeaveTypeModel.type == "Casual Leave" &&
+                        (daysBetween > int.parse(Provider
+                            .of<DataProvider>(context, listen: false)
+                            .employeeModel
+                            .casualLeaveCount!))) {
+                      Toast.show(
+                          "You dont have enough casual leaves left", context);
+                    }
+                    else if (selectedLeaveTypeModel.type == "Marriage Leave" &&
+                        (daysBetween > int.parse(Provider
+                            .of<DataProvider>(context, listen: false)
+                            .employeeModel
+                            .marriageLeaveCount!))) {
+                      Toast.show(
+                          "You dont have enough marriage leaves left", context);
+                    }
+                    else if (selectedLeaveTypeModel.type == "Sick Leave" &&
+                        (daysBetween > int.parse(Provider
+                            .of<DataProvider>(context, listen: false)
+                            .employeeModel
+                            .sickLeaveCount!))) {
+                      Toast.show(
+                          "You dont have enough sick leaves left", context);
+                    }
+                    else {
+                      leaveFormModel.fromDate = fromDate.toString();
+                      leaveFormModel.toDate = toDate.toString();
+                      leaveFormModel.leaveType = selectedLeaveTypeModel.type;
+                      leaveFormModel.reason = reasonController.text;
+                      leaveFormModel.employeeName = Provider
+                          .of<DataProvider>
+                        (context, listen: false)
+                          .employeeModel
+                          .firstName;
+                      leaveFormModel.employeeId = Provider
+                          .of<DataProvider>
+                        (context, listen: false)
+                          .employeeModel
+                          .employeeId;
+                      leaveFormModel.status = "Pending";
+                      leaveFormModel.isAdminRead = false;
+                      leaveFormModel.casualLeaveCount = Provider
+                          .of<DataProvider>
+                        (context, listen: false)
+                          .employeeModel
+                          .casualLeaveCount;
+                      leaveFormModel.mrgLeaveCount = Provider
+                          .of<DataProvider>
+                        (context, listen: false)
+                          .employeeModel
+                          .marriageLeaveCount;
+                      leaveFormModel.sickLeaveCount = Provider
+                          .of<DataProvider>
+                        (context, listen: false)
+                          .employeeModel
+                          .sickLeaveCount;
 
-                    leaveFormModel.email = Provider
-                        .of<DataProvider>
-                      (context, listen: false)
-                        .employeeModel
-                        .email;
-                    leaveFormModel.fstName = Provider
-                        .of<DataProvider>
-                      (context, listen: false)
-                        .employeeModel
-                        .firstName;
-                    leaveFormModel.mdlName = Provider
-                        .of<DataProvider>
-                      (context, listen: false)
-                        .employeeModel
-                        .middleName;
-                    leaveFormModel.lstName = Provider
-                        .of<DataProvider>
-                      (context, listen: false)
-                        .employeeModel
-                        .lastName;
-                    leaveFormModel.usrName = Provider
-                        .of<DataProvider>
-                      (context, listen: false)
-                        .employeeModel
-                        .userName;
-                    leaveFormModel.password = Provider
-                        .of<DataProvider>
-                      (context, listen: false)
-                        .employeeModel
-                        .password;
-                    leaveFormModel.phn = Provider
-                        .of<DataProvider>
-                      (context, listen: false)
-                        .employeeModel
-                        .phno;
-                    addLeaveRequest();
+                      leaveFormModel.email = Provider
+                          .of<DataProvider>
+                        (context, listen: false)
+                          .employeeModel
+                          .email;
+                      leaveFormModel.fstName = Provider
+                          .of<DataProvider>
+                        (context, listen: false)
+                          .employeeModel
+                          .firstName;
+                      leaveFormModel.mdlName = Provider
+                          .of<DataProvider>
+                        (context, listen: false)
+                          .employeeModel
+                          .middleName;
+                      leaveFormModel.lstName = Provider
+                          .of<DataProvider>
+                        (context, listen: false)
+                          .employeeModel
+                          .lastName;
+                      leaveFormModel.usrName = Provider
+                          .of<DataProvider>
+                        (context, listen: false)
+                          .employeeModel
+                          .userName;
+                      leaveFormModel.password = Provider
+                          .of<DataProvider>
+                        (context, listen: false)
+                          .employeeModel
+                          .password;
+                      leaveFormModel.phn = Provider
+                          .of<DataProvider>
+                        (context, listen: false)
+                          .employeeModel
+                          .phno;
+                      addLeaveRequest();
+                    }
                   }
                 },
                 child: Container(
@@ -382,28 +398,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
     );
   }
 
-  Future<DateTime?> selectFromDate(BuildContext context, DateTime _date) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2100),
-        initialEntryMode: DatePickerEntryMode.calendarOnly,
-        builder: (context, child) {
-          return Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: ColorScheme.light(
-                  primary: Colors.lightBlue.shade900, // header background color
-                  onPrimary: Colors.white, // header text color
-                  onSurface: Colors.lightBlue.shade900, // body text color
-                ),
-              ),
-              child: child!);
-        });
-
-    return picked;
-  }
-  Future<DateTime?> selectToDate(BuildContext context, DateTime _date) async {
+  Future<DateTime?> selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
@@ -437,4 +432,5 @@ class _LeaveScreenState extends State<LeaveScreen> {
       });
 
   }
+
 }

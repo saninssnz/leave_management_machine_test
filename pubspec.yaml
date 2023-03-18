@@ -40,6 +40,8 @@ dependencies:
   firebase_storage: ^11.0.10
   provider:
   intl:
+  firebase_messaging:
+  flutter_local_notifications:
 
 dev_dependencies:
   flutter_test:

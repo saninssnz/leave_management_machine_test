@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:leave_management/Model/LeaveFormModel.dart';
-import 'package:leave_management/Ui/EmployeeLeaveRequestListScreen.dart';
-import 'package:leave_management/Ui/EmployeeNotificationDetaislScreen.dart';
+import 'package:leave_management/Ui/User/EmployeeNotificationDetaislScreen.dart';
 import 'package:leave_management/Utils/DataRepo.dart';
 import 'package:leave_management/Utils/Provider.dart';
 import 'package:provider/provider.dart';

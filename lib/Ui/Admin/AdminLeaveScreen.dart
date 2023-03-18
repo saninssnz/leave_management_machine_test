@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:leave_management/Model/EmployeeModel.dart';
 import 'package:leave_management/Model/LeaveFormModel.dart';
@@ -24,19 +25,20 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
   LeaveStatusModel selectedLeaveStatusModel = LeaveStatusModel();
   LeaveFormModel leaveFormModel = LeaveFormModel();
   EmployeeModel employeeModel = EmployeeModel();
-  // DateTime selectedDate = DateTime.now();
-  // DateTime fromDate = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0,0);
-  // DateTime toDate = DateTime.now();
-  // TextEditingController reasonController = new TextEditingController();
+  String deviceToken = "";
 
   @override
   void initState() {
-    selectedLeaveStatusModel.type = "Pending";
+
+    null!=widget.leaveFormModel?
+    selectedLeaveStatusModel.type = widget.leaveFormModel.status.toString():
+    "Pending";
 
     setState(() {});
 
     super.initState();
   }
+
 
 
   @override
@@ -211,7 +213,6 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
                   ),
                   fillColor: Colors.white,
                   alignLabelWithHint: true,
-                  hintText: ("Enter reason"),
                   hintStyle: TextStyle(
                       color: Colors.grey, fontSize: 15, fontWeight: FontWeight.w400),
                 ),
@@ -295,6 +296,9 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
                   leaveFormModel.id = widget.leaveFormModel.id.toString();
                   leaveFormModel.createdOn = widget.leaveFormModel.createdOn;
                   leaveFormModel.reference = widget.leaveFormModel.reference;
+                  leaveFormModel.oldCasualLeaveCount = widget.leaveFormModel.casualLeaveCount;
+                  leaveFormModel.oldmrgLeaveCount = widget.leaveFormModel.mrgLeaveCount;
+                  leaveFormModel.oldsickLeaveCount = widget.leaveFormModel.sickLeaveCount;
                   leaveFormModel.isAdminRead = true;
                   leaveFormModel.isUserRead = false;
                   updateLeaveRequest();
@@ -307,8 +311,7 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
                     if(widget.leaveFormModel.leaveType == "Casual Leave"){
                       int casualLeaveCount =(int.parse(widget.leaveFormModel.casualLeaveCount.toString()) - dif);
                       employeeModel.casualLeaveCount = casualLeaveCount.toString();
-
-                      employeeModel.sickLeaveCount = widget.leaveFormModel.sickLeaveCounr.toString();
+                      employeeModel.sickLeaveCount = widget.leaveFormModel.sickLeaveCount.toString();
                       employeeModel.marriageLeaveCount =widget.leaveFormModel.mrgLeaveCount.toString();
                       employeeModel.employeeId = widget.leaveFormModel.employeeId.toString();
                       employeeModel.email = widget.leaveFormModel.email.toString();
@@ -325,7 +328,7 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
                       int mrgCount =(int.parse(widget.leaveFormModel.mrgLeaveCount.toString()) - dif);
                       employeeModel.marriageLeaveCount = mrgCount.toString();
 
-                      employeeModel.sickLeaveCount = widget.leaveFormModel.sickLeaveCounr.toString();
+                      employeeModel.sickLeaveCount = widget.leaveFormModel.sickLeaveCount.toString();
                       employeeModel.casualLeaveCount =widget.leaveFormModel.casualLeaveCount.toString();
                       employeeModel.employeeId = widget.leaveFormModel.employeeId.toString();
                       employeeModel.email = widget.leaveFormModel.email.toString();
@@ -339,9 +342,57 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
                       DataRepo().updateEmployee(employeeModel);
                     }
                     else if(widget.leaveFormModel.leaveType == "Sick Leave"){
-                      int sickLeaveCount =(int.parse(widget.leaveFormModel.sickLeaveCounr.toString()) - dif);
+                      int sickLeaveCount =(int.parse(widget.leaveFormModel.sickLeaveCount.toString()) - dif);
                       employeeModel.sickLeaveCount = sickLeaveCount.toString();
 
+                      employeeModel.casualLeaveCount = widget.leaveFormModel.casualLeaveCount.toString();
+                      employeeModel.marriageLeaveCount =widget.leaveFormModel.mrgLeaveCount.toString();
+                      employeeModel.employeeId = widget.leaveFormModel.employeeId.toString();
+                      employeeModel.email = widget.leaveFormModel.email.toString();
+                      employeeModel.firstName = widget.leaveFormModel.fstName.toString();
+                      employeeModel.middleName = widget.leaveFormModel.mdlName.toString();
+                      employeeModel.lastName = widget.leaveFormModel.lstName.toString();
+                      employeeModel.password = widget.leaveFormModel.password.toString();
+                      employeeModel.phno = widget.leaveFormModel.phn.toString();
+                      employeeModel.userName = widget.leaveFormModel.usrName.toString();
+
+                      DataRepo().updateEmployee(employeeModel);
+                    }
+                  }
+                  else if(selectedLeaveStatusModel.type == "Reject"){
+
+                    if(widget.leaveFormModel.leaveType == "Casual Leave"){
+                      employeeModel.casualLeaveCount = widget.leaveFormModel.oldCasualLeaveCount;
+                      employeeModel.sickLeaveCount = widget.leaveFormModel.sickLeaveCount.toString();
+                      employeeModel.marriageLeaveCount =widget.leaveFormModel.mrgLeaveCount.toString();
+                      employeeModel.employeeId = widget.leaveFormModel.employeeId.toString();
+                      employeeModel.email = widget.leaveFormModel.email.toString();
+                      employeeModel.firstName = widget.leaveFormModel.fstName.toString();
+                      employeeModel.middleName = widget.leaveFormModel.mdlName.toString();
+                      employeeModel.lastName = widget.leaveFormModel.lstName.toString();
+                      employeeModel.password = widget.leaveFormModel.password.toString();
+                      employeeModel.phno = widget.leaveFormModel.phn.toString();
+                      employeeModel.userName = widget.leaveFormModel.usrName.toString();
+
+                      DataRepo().updateEmployee(employeeModel);
+                    }
+                    else if(widget.leaveFormModel.leaveType == "Marriage Leave"){
+                      employeeModel.marriageLeaveCount = widget.leaveFormModel.oldmrgLeaveCount.toString();
+                      employeeModel.sickLeaveCount = widget.leaveFormModel.sickLeaveCount.toString();
+                      employeeModel.casualLeaveCount =widget.leaveFormModel.casualLeaveCount.toString();
+                      employeeModel.employeeId = widget.leaveFormModel.employeeId.toString();
+                      employeeModel.email = widget.leaveFormModel.email.toString();
+                      employeeModel.firstName = widget.leaveFormModel.fstName.toString();
+                      employeeModel.middleName = widget.leaveFormModel.mdlName.toString();
+                      employeeModel.lastName = widget.leaveFormModel.lstName.toString();
+                      employeeModel.password = widget.leaveFormModel.password.toString();
+                      employeeModel.phno = widget.leaveFormModel.phn.toString();
+                      employeeModel.userName = widget.leaveFormModel.usrName.toString();
+
+                      DataRepo().updateEmployee(employeeModel);
+                    }
+                    else if(widget.leaveFormModel.leaveType == "Sick Leave"){
+                      employeeModel.sickLeaveCount = widget.leaveFormModel.oldsickLeaveCount.toString();
                       employeeModel.casualLeaveCount = widget.leaveFormModel.casualLeaveCount.toString();
                       employeeModel.marriageLeaveCount =widget.leaveFormModel.mrgLeaveCount.toString();
                       employeeModel.employeeId = widget.leaveFormModel.employeeId.toString();
