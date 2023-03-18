@@ -259,8 +259,30 @@ class _LeaveScreenState extends State<LeaveScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: InkWell(
                 onTap: (){
+                  int daysBetween = (toDate.difference(fromDate).inHours / 24).round();
                   if(reasonController.text.isEmpty){
                     Toast.show("Enter reason", context);
+                  }
+                  else if(selectedLeaveTypeModel.type == "Casual Leave" &&
+                      (daysBetween>int.parse(Provider.of<DataProvider>(context, listen: false)
+                          .employeeModel.casualLeaveCount!))){
+
+                      Toast.show("You dont have enough casual leaves left", context);
+
+                  }
+                  else if(selectedLeaveTypeModel.type == "Marriage Leave" &&
+                      (daysBetween>int.parse(Provider.of<DataProvider>(context, listen: false)
+                          .employeeModel.marriageLeaveCount!))){
+
+                      Toast.show("You dont have enough marriage leaves left", context);
+
+                  }
+                  else if(selectedLeaveTypeModel.type == "Sick Leave" &&
+                      (daysBetween>int.parse(Provider.of<DataProvider>(context, listen: false)
+                          .employeeModel.sickLeaveCount!))){
+
+                      Toast.show("You dont have enough sick leaves left", context);
+
                   }
                   else {
                     leaveFormModel.fromDate = fromDate.toString();
@@ -279,6 +301,57 @@ class _LeaveScreenState extends State<LeaveScreen> {
                         .employeeId;
                     leaveFormModel.status = "Pending";
                     leaveFormModel.isAdminRead = false;
+                    leaveFormModel.casualLeaveCount = Provider
+                        .of<DataProvider>
+                      (context, listen: false)
+                        .employeeModel
+                        .casualLeaveCount;
+                    leaveFormModel.mrgLeaveCount = Provider
+                        .of<DataProvider>
+                      (context, listen: false)
+                        .employeeModel
+                        .marriageLeaveCount;
+                    leaveFormModel.sickLeaveCounr = Provider
+                        .of<DataProvider>
+                      (context, listen: false)
+                        .employeeModel
+                        .sickLeaveCount;
+
+                    leaveFormModel.email = Provider
+                        .of<DataProvider>
+                      (context, listen: false)
+                        .employeeModel
+                        .email;
+                    leaveFormModel.fstName = Provider
+                        .of<DataProvider>
+                      (context, listen: false)
+                        .employeeModel
+                        .firstName;
+                    leaveFormModel.mdlName = Provider
+                        .of<DataProvider>
+                      (context, listen: false)
+                        .employeeModel
+                        .middleName;
+                    leaveFormModel.lstName = Provider
+                        .of<DataProvider>
+                      (context, listen: false)
+                        .employeeModel
+                        .lastName;
+                    leaveFormModel.usrName = Provider
+                        .of<DataProvider>
+                      (context, listen: false)
+                        .employeeModel
+                        .userName;
+                    leaveFormModel.password = Provider
+                        .of<DataProvider>
+                      (context, listen: false)
+                        .employeeModel
+                        .password;
+                    leaveFormModel.phn = Provider
+                        .of<DataProvider>
+                      (context, listen: false)
+                        .employeeModel
+                        .phno;
                     addLeaveRequest();
                   }
                 },
