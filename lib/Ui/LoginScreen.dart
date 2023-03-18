@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:leave_management/Model/AdminModel.dart';
 import 'package:leave_management/Model/EmployeeModel.dart';
 import 'package:leave_management/Ui/AdminDashboard.dart';
 import 'package:leave_management/Ui/EmployeeDashboard.dart';
@@ -42,16 +43,40 @@ class _LoginScreenState extends State<LoginScreen> {
             }
             else {
               if (widget.isAdmin) {
-                if (usernameController.text == "admin" &&
-                    passwordController.text == "123") {
-                  Navigator.of(context)
-                      .pushReplacement(MaterialPageRoute(
-                      builder: (context) => AdminDashboard()
-                  ));
-                }
-                else{
-                  Toast.show("Wrong username or password", context);
-                }
+                List<DocumentSnapshot> docs;
+
+                DataRepo.adminCollection
+                    .where("userName", isEqualTo: usernameController.text)
+                    .get()
+                    .then((query) async {
+
+                  isLoading = false;
+                  setState(() {
+
+                  });
+
+                  docs = query.docs;
+                  if (docs.length > 0) {
+                    AdminModel adminModel =
+                    AdminModel.fromSnapshot(docs[0]);
+
+                    if(adminModel.password == passwordController.text){
+                      final String userJson = adminModelToJson(adminModel);
+
+                      DataRepo().updateAdmin(adminModel);
+                      Toast.show("Welcome", context);
+
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              AdminDashboard()));
+                    }else{
+                      Toast.show("Invalid Password", context);
+                    }
+
+                  } else {
+                    Toast.show("User not found", context);
+                  }
+                });
               }
               else{
                 isLoading = true;

@@ -2,15 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
+import 'package:leave_management/Model/AdminModel.dart';
 import 'package:leave_management/Model/EmployeeModel.dart';
+import 'package:leave_management/Model/LeaveFormModel.dart';
 
 class DataRepo {
   static String fireStoreInstanceName="leave management system";
   // static String storageDir="images/";
   // 1
   static CollectionReference employeeCollection = getFirestoreInstance()!.collection('employee');
-  static CollectionReference workCollection = getFirestoreInstance()!.collection('work');
-  static CollectionReference issueCollection = getFirestoreInstance()!.collection('issues');
+  static CollectionReference adminCollection = getFirestoreInstance()!.collection('admin');
+  static CollectionReference leaveCollection = getFirestoreInstance()!.collection('leaveForm');
   static CollectionReference staffAttendanceCollection = getFirestoreInstance()!.collection('staffAttendance');
   static CollectionReference commentCollection = getFirestoreInstance()!.collection('comment');
 
@@ -30,36 +32,36 @@ class DataRepo {
   }
 
 
-  // Stream<QuerySnapshot> getCommentStream() {
-  //   return commentCollection.snapshots();
-  // }
-  // static Future<List<CommentModel>> getAllComments() async {
-  //   List<CommentModel> commentList =[];
-  //   await commentCollection.get()
-  //       .then((data) {
-  //     commentList = List<CommentModel>.from(
-  //         data.docs.map((x) => CommentModel.fromSnapshot(x)));
-  //
-  //   });
-  //   return commentList;
-  // }
-  //
-  //
+  Stream<QuerySnapshot> getAdminStream() {
+    return commentCollection.snapshots();
+  }
+  static Future<List<AdminModel>> getAllComments() async {
+    List<AdminModel> adminList =[];
+    await commentCollection.get()
+        .then((data) {
+      adminList = List<AdminModel>.from(
+          data.docs.map((x) => AdminModel.fromSnapshot(x)));
+
+    });
+    return adminList;
+  }
   //
   //
-  // Stream<QuerySnapshot> getIssueStream() {
-  //   return issueCollection.snapshots();
-  // }
-  // static Future<List<IssueDetailsModel>> getAllIssues() async {
-  //   List<IssueDetailsModel> issueList =[];
-  //   await issueCollection.orderBy("createdOn",descending: true).get()
-  //       .then((data) {
-  //     issueList = List<IssueDetailsModel>.from(
-  //         data.docs.map((x) => IssueDetailsModel.fromSnapshot(x)));
   //
-  //   });
-  //   return issueList;
-  // }
+  //
+  Stream<QuerySnapshot> getLeaveListStream() {
+    return leaveCollection.snapshots();
+  }
+  static Future<List<LeaveFormModel>> getAllIssues() async {
+    List<LeaveFormModel> leaveList =[];
+    await leaveCollection.orderBy("createdOn",descending: true).get()
+        .then((data) {
+      leaveList = List<LeaveFormModel>.from(
+          data.docs.map((x) => LeaveFormModel.fromSnapshot(x)));
+
+    });
+    return leaveList;
+  }
   //
   //
   //
@@ -92,18 +94,23 @@ class DataRepo {
     return employeeCollection.add(employeeModel.toJson());
   }
 
-  // Future<DocumentReference> saveIssue(IssueDetailsModel issueDetailsModel) {
-  //   return issueCollection.add(issueDetailsModel.toJson());
-  // }
-  //
-  // Future updateIssue(IssueDetailsModel issueDetailsModel) async {
-  //   await issueCollection.doc(issueDetailsModel.issueId).update(issueDetailsModel.toJson());
-  // }
+  Future<DocumentReference> addLeaveRequest(LeaveFormModel leaveFormModel) {
+    return leaveCollection.add(leaveFormModel.toJson());
+  }
+
+  Future updateLeaveRequest(LeaveFormModel leaveFormModel) async {
+    await leaveCollection.doc(leaveFormModel.id).update(leaveFormModel.toJson());
+  }
   // // 4
   Future updateEmployee(EmployeeModel employeeModel) async {
     // print(userModel.email.toString()+userModel.userId.toString());
     await employeeCollection.doc(employeeModel.employeeId).update(employeeModel.toJson());
 
+  }
+
+  Future updateAdmin(AdminModel adminModel) async {
+    // print(userModel.email.toString()+userModel.userId.toString());
+    await adminCollection.doc(adminModel.userId).update(adminModel.toJson());
   }
   //
   // Future<DocumentReference> saveStaffAttendance(StaffAttendanceModel staffAttendanceModel) {

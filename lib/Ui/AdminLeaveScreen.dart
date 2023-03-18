@@ -8,13 +8,13 @@ import 'package:leave_management/Utils/Toast.dart';
 import 'package:leave_management/Utils/Utils.dart';
 import 'package:provider/provider.dart';
 
-class LeaveScreen extends StatefulWidget {
+class AdminLeaveScreen extends StatefulWidget {
 
   @override
-  _LeaveScreenState createState() => _LeaveScreenState();
+  _AdminLeaveScreenState createState() => _AdminLeaveScreenState();
 }
 
-class _LeaveScreenState extends State<LeaveScreen> {
+class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
 
   LeaveTypeModel selectedLeaveTypeModel = LeaveTypeModel();
   LeaveFormModel leaveFormModel = LeaveFormModel();
@@ -52,10 +52,10 @@ class _LeaveScreenState extends State<LeaveScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Text("Select Date",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15
-              ),),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15
+                ),),
             ),
             SizedBox(
               height: 10,
@@ -72,7 +72,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
                     child: InkWell(
                       onTap: (){
                         selectFromDate(context,fromDate).then((value){
-                            fromDate = DateTime(value!.year,value.month,value.day,0,0,0,0);
+                          fromDate = DateTime(value!.year,value.month,value.day,0,0,0,0);
                           setState(() {});
                         });
                       },
@@ -114,7 +114,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
                     child: InkWell(
                       onTap: (){
                         selectToDate(context, toDate).then((value){
-                            toDate = DateTime(value!.year,value.month,value.day,0,0,0,0);
+                          toDate = DateTime(value!.year,value.month,value.day,0,0,0,0);
                           setState(() {});
                         });
 
@@ -162,57 +162,57 @@ class _LeaveScreenState extends State<LeaveScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Select Leave Type: ",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold
-                  ),),
-        Container(
-          height: 35,
-          decoration: BoxDecoration(
-              color: Colors.teal,
-              borderRadius: BorderRadius.circular(5),
-              // border: Border.all(color: Colors.black, width: 1)
-          ),
-          child: DropdownButtonHideUnderline(
-                child: ButtonTheme(
-                  alignedDropdown: true,
-                  child: DropdownButton(
-                    focusColor: Colors.white,
-                    hint: Text(
-                      selectedLeaveTypeModel.type.toString(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                    style: TextStyle(
                         fontSize: 15,
-                      ),
+                        fontWeight: FontWeight.bold
+                    ),),
+                  Container(
+                    height: 35,
+                    decoration: BoxDecoration(
+                      color: Colors.teal,
+                      borderRadius: BorderRadius.circular(5),
+                      // border: Border.all(color: Colors.black, width: 1)
                     ),
-                    iconSize: 30.0,
-                    iconDisabledColor: Colors.white,
-                    iconEnabledColor: Colors.white,
-                    // style: TextStyle(color: Colors.blue),
-                    items: Utils.getLeaveTypes().map(
-                          (val) {
-                        return DropdownMenuItem<LeaveTypeModel>(
-                            value: val,
-                            child: Text(
-                              val.type!,
+                    child: DropdownButtonHideUnderline(
+                        child: ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButton(
+                            focusColor: Colors.white,
+                            hint: Text(
+                              selectedLeaveTypeModel.type.toString(),
                               style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
                                 fontSize: 15,
                               ),
-                            ));
-                      },
-                    ).toList(),
-                    onChanged: (val) {
-                      setState(
-                            () {
-                          selectedLeaveTypeModel = val!;
-                          // issueDetailsModel.statusId = selectedStatusModel.id;
-                        },
-                      );
-                    },
-                  ),
-                )),
-        )
+                            ),
+                            iconSize: 30.0,
+                            iconDisabledColor: Colors.white,
+                            iconEnabledColor: Colors.white,
+                            // style: TextStyle(color: Colors.blue),
+                            items: Utils.getLeaveTypes().map(
+                                  (val) {
+                                return DropdownMenuItem<LeaveTypeModel>(
+                                    value: val,
+                                    child: Text(
+                                      val.type!,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                      ),
+                                    ));
+                              },
+                            ).toList(),
+                            onChanged: (val) {
+                              setState(
+                                    () {
+                                  selectedLeaveTypeModel = val!;
+                                  // issueDetailsModel.statusId = selectedStatusModel.id;
+                                },
+                              );
+                            },
+                          ),
+                        )),
+                  )
                 ],
               ),
             ),
@@ -352,15 +352,15 @@ class _LeaveScreenState extends State<LeaveScreen> {
   }
 
   addIssue() {
-      leaveFormModel.createdOn = Timestamp.now();
-      DataRepo().addLeaveRequest(leaveFormModel).then((value) {
-        leaveFormModel.id = value.id;
-        DataRepo().updateLeaveRequest(leaveFormModel);
-        Navigator.of(context).pop();
-        Toast.show("Leave requested successfully", context);
-      });
-      setState(() {
-      });
+    leaveFormModel.createdOn = Timestamp.now();
+    DataRepo().addLeaveRequest(leaveFormModel).then((value) {
+      leaveFormModel.id = value.id;
+      DataRepo().updateLeaveRequest(leaveFormModel);
+      Navigator.of(context).pop();
+      Toast.show("Leave requested successfully", context);
+    });
+    setState(() {
+    });
 
   }
 }

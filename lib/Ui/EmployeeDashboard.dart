@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:leave_management/Ui/EmployeeLeaveRequestListScreen.dart';
 import 'package:leave_management/Ui/LeaveScreen.dart';
 import 'package:leave_management/Ui/LoginScreen.dart';
 import 'package:leave_management/Ui/ProfileScreen.dart';
@@ -38,106 +39,154 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
       body: SafeArea(
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              InkWell(
-                onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          ProfileScreen(false)));
-                },
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
-                  color:Colors.orange,
-                  child: Container(
-                    height: 150,
-                    width: 150,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                            height: 80,
-                            width: 80,
-                            child: Image.asset("assets/images/adm.png")),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text("My Profile",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontSize: 25
-                            ),),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  InkWell(
+                    onTap: (){
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              ProfileScreen(false)));
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      color:Colors.orange,
+                      child: Container(
+                        height: 150,
+                        width: 150,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                                height: 80,
+                                width: 80,
+                                child: Image.asset("assets/images/adm.png")),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text("My Profile",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 25
+                                ),),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ),
-              InkWell(
-                onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          LeaveScreen()));
-                },
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
-                  color:Colors.green,
-                  child: Container(
-                    height: 150,
-                    width: 150,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                            height: 100,
-                            width: 100,
-                            child: Image.asset("assets/images/leave.png")),
-                        Text("Leave",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 25
-                          ),),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: (){
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          LoginScreen(false)));
-                },
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
-                  color:Colors.redAccent,
-                  child: Container(
-                    height: 150,
-                    width: 150,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                            height: 80,
-                            width: 80,
-                            child: Image.asset("assets/images/logout.png")),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text("Logout",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontSize: 25
-                            ),),
+                  InkWell(
+                    onTap: (){
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              LeaveScreen()));
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      color:Colors.green,
+                      child: Container(
+                        height: 150,
+                        width: 150,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                                height: 100,
+                                width: 100,
+                                child: Image.asset("assets/images/leave.png")),
+                            Text("Leave",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 25
+                              ),),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                ],
+              ),
+
+              SizedBox(height: 30,),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  InkWell(
+                    onTap: (){
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              LoginScreen(false)));
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      color:Colors.redAccent,
+                      child: Container(
+                        height: 150,
+                        width: 150,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                                height: 80,
+                                width: 80,
+                                child: Image.asset("assets/images/logout.png")),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text("Logout",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 25
+                                ),),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: (){
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              EmployeeLeaveRequestListScreen()));
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      color:Colors.blue,
+                      child: Container(
+                        height: 150,
+                        width: 150,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                                height: 80,
+                                width: 80,
+                                child: Image.asset("assets/images/request.png")),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text("Leave Requests",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 25
+                                ),),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               )
             ],
           ),

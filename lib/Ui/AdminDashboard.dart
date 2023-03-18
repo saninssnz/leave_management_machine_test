@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:leave_management/Ui/AdminNotificationScreen.dart';
 import 'package:leave_management/Ui/CreateEmployeeScreen.dart';
 import 'package:leave_management/Ui/LoginScreen.dart';
 import 'package:leave_management/Ui/ProfileScreen.dart';
+import 'package:leave_management/Utils/Provider.dart';
+import 'package:provider/provider.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({Key? key}) : super(key: key);
@@ -21,13 +24,21 @@ class _AdminDashboardState extends State<AdminDashboard> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(top: 10.0,right: 10),
-            child: Badge(
-              label: Text("0",style: TextStyle(
-                  color: Colors.white
-              ),),
-              backgroundColor: Colors.redAccent,
-              child: Icon(Icons.notifications,
-                size: 30,),
+            child: InkWell(
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        AdminNotificationScreen()));
+              },
+              child: Badge(
+                label: Text( Provider.of<DataProvider>(context, listen: false).
+                leaveList.length.toString(),style: TextStyle(
+                    color: Colors.white
+                ),),
+                backgroundColor: Colors.redAccent,
+                child: Icon(Icons.notifications,
+                  size: 30,),
+              ),
             ),
           )
         ],
