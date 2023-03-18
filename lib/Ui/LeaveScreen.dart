@@ -278,7 +278,8 @@ class _LeaveScreenState extends State<LeaveScreen> {
                         .employeeModel
                         .employeeId;
                     leaveFormModel.status = "Pending";
-                    addIssue();
+                    leaveFormModel.isAdminRead = false;
+                    addLeaveRequest();
                   }
                 },
                 child: Container(
@@ -351,7 +352,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
     return picked;
   }
 
-  addIssue() {
+  addLeaveRequest() {
       leaveFormModel.createdOn = Timestamp.now();
       DataRepo().addLeaveRequest(leaveFormModel).then((value) {
         leaveFormModel.id = value.id;

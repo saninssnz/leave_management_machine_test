@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:leave_management/Model/LeaveStatusModel.dart';
 import 'package:leave_management/Model/StatusModel.dart';
 
 class Utils{
@@ -8,6 +9,10 @@ class Utils{
   static int CASUAL = 1;
   static int SICK = 2;
   static int MARRIAGE = 3;
+
+  static int ACCEPT = 4;
+  static int REJECT = 5;
+  static int PENDING = 6;
 
 
   static String getAvatar(String name) {
@@ -32,12 +37,37 @@ class Utils{
     }
     return status;
   }
+
   static List<LeaveTypeModel> getLeaveTypes(){
     List<LeaveTypeModel> statusList=[];
 
     statusList.add(new LeaveTypeModel(id: CASUAL,type: "Casual Leave"));
     statusList.add(new LeaveTypeModel(id: MARRIAGE,type: "Marriage Leave",));
     statusList.add(new LeaveTypeModel(id: SICK,type: "Sick Leave",));
+    return statusList;
+  }
+
+
+
+  static String getLeaveStatus(int statusId) {
+    String? status;
+    if(statusId == 4){
+      status = "Accept";
+    }
+    else if(statusId == 5){
+      status = "Reject";
+    }
+    else {
+      status = "Pending";
+    }
+    return status;
+  }
+  static List<LeaveStatusModel> getLeavesStatus(){
+    List<LeaveStatusModel> statusList=[];
+
+    statusList.add(new LeaveStatusModel(id: ACCEPT,type: "Accept"));
+    statusList.add(new LeaveStatusModel(id: REJECT,type: "Reject",));
+    statusList.add(new LeaveStatusModel(id: PENDING,type: "Pending",));
     return statusList;
   }
 

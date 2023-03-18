@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:leave_management/Model/LeaveModel.dart';
 
 LeaveFormModel leaveFormModelFromJson(String str) => LeaveFormModel.fromJson(json.decode(str));
 
@@ -18,6 +17,8 @@ class LeaveFormModel {
   String? employeeId;
   Timestamp? createdOn;
   String? status;
+  bool? isAdminRead;
+  bool? isUserRead;
 
   LeaveFormModel(
       {
@@ -30,6 +31,8 @@ class LeaveFormModel {
         this.createdOn,
         this.status,
         this.employeeId,
+        this.isAdminRead,
+        this.isUserRead,
       });
 
   factory LeaveFormModel.fromJson(Map<String, dynamic> json) {
@@ -45,6 +48,8 @@ class LeaveFormModel {
       createdOn: json['createdOn'],
       status: json['status'],
       employeeId: json['employeeId'],
+      isAdminRead: null==json['isAdminRead']?false:true,
+      isUserRead: null==json['isUserRead']?false:true,
     );
   }
 
@@ -58,6 +63,8 @@ class LeaveFormModel {
     'createdOn': createdOn,
     'status': status,
     'employeeId': employeeId,
+    'isAdminRead': isAdminRead,
+    'isUserRead': isUserRead,
   };
 
   factory LeaveFormModel.fromSnapshot(DocumentSnapshot snapshot) {

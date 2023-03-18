@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:leave_management/Model/LeaveModel.dart';
 
 AdminModel adminModelFromJson(String str) => AdminModel.fromJson(json.decode(str));
 

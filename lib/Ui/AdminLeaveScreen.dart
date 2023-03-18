@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:leave_management/Model/LeaveFormModel.dart';
+import 'package:leave_management/Model/LeaveStatusModel.dart';
 import 'package:leave_management/Model/StatusModel.dart';
 import 'package:leave_management/Utils/DataRepo.dart';
 import 'package:leave_management/Utils/Provider.dart';
@@ -19,8 +20,8 @@ class AdminLeaveScreen extends StatefulWidget {
 
 class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
 
-  LeaveTypeModel selectedLeaveTypeModel = LeaveTypeModel();
-  // LeaveFormModel leaveFormModel = LeaveFormModel();
+  LeaveStatusModel selectedLeaveStatusModel = LeaveStatusModel();
+  LeaveFormModel leaveFormModel = LeaveFormModel();
   // DateTime selectedDate = DateTime.now();
   // DateTime fromDate = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0,0);
   // DateTime toDate = DateTime.now();
@@ -28,7 +29,7 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
 
   @override
   void initState() {
-    selectedLeaveTypeModel.type = "Casual Leave";
+    selectedLeaveStatusModel.type = "Pending";
 
     setState(() {});
 
@@ -220,7 +221,7 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Select Leave Type: ",
+                  Text("Select Status: ",
                     style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold
@@ -228,7 +229,7 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
                   Container(
                     height: 35,
                     decoration: BoxDecoration(
-                      color: Colors.teal,
+                      color: Colors.deepOrangeAccent,
                       borderRadius: BorderRadius.circular(5),
                       // border: Border.all(color: Colors.black, width: 1)
                     ),
@@ -238,7 +239,7 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
                           child: DropdownButton(
                             focusColor: Colors.white,
                             hint: Text(
-                              selectedLeaveTypeModel.type.toString(),
+                              selectedLeaveStatusModel.type.toString(),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -249,9 +250,9 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
                             iconDisabledColor: Colors.white,
                             iconEnabledColor: Colors.white,
                             // style: TextStyle(color: Colors.blue),
-                            items: Utils.getLeaveTypes().map(
+                            items: Utils.getLeavesStatus().map(
                                   (val) {
-                                return DropdownMenuItem<LeaveTypeModel>(
+                                return DropdownMenuItem<LeaveStatusModel>(
                                     value: val,
                                     child: Text(
                                       val.type!,
@@ -264,7 +265,7 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
                             onChanged: (val) {
                               setState(
                                     () {
-                                  selectedLeaveTypeModel = val!;
+                                      selectedLeaveStatusModel = val!;
                                   // issueDetailsModel.statusId = selectedStatusModel.id;
                                 },
                               );
@@ -282,6 +283,19 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: InkWell(
                 onTap: (){
+                  leaveFormModel.fromDate = widget.leaveFormModel.fromDate.toString();
+                  leaveFormModel.toDate = widget.leaveFormModel.toDate.toString();
+                  leaveFormModel.leaveType = widget.leaveFormModel.leaveType.toString();
+                  leaveFormModel.reason = widget.leaveFormModel.reason.toString();
+                  leaveFormModel.employeeName = widget.leaveFormModel.employeeName.toString();
+                  leaveFormModel.employeeId = widget.leaveFormModel.employeeId.toString();
+                  leaveFormModel.status = selectedLeaveStatusModel.type.toString();
+                  leaveFormModel.id = widget.leaveFormModel.id.toString();
+                  leaveFormModel.createdOn = widget.leaveFormModel.createdOn;
+                  leaveFormModel.reference = widget.leaveFormModel.reference;
+                  leaveFormModel.isAdminRead = true;
+                  leaveFormModel.isUserRead = false;
+                  updateLeaveRequest();
 
                 },
                 child: Container(
@@ -310,4 +324,13 @@ class _AdminLeaveScreenState extends State<AdminLeaveScreen> {
       ),
     );
   }
+
+  updateLeaveRequest() {
+      DataRepo().updateLeaveRequest(leaveFormModel);
+      if (mounted) {
+        setState(() {});
+      }
+      Navigator.of(context).pop(true);
+      Toast.show("Updated successfully", context);
+    }
 }

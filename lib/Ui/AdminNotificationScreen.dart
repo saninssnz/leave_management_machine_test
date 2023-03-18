@@ -16,8 +16,6 @@ class AdminNotificationScreen extends StatefulWidget {
 
 class _AdminNotificationScreenState extends State<AdminNotificationScreen> {
 
-  List<LeaveFormModel> leaveList = [];
-  bool  isLoadingRequests = false;
 
   @override
   void initState() {
@@ -52,6 +50,10 @@ class _AdminNotificationScreenState extends State<AdminNotificationScreen> {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: InkWell(
               onTap: (){
+                DataRepo().updateLeaveRequest(leaveFormModel);
+                if (mounted) {
+                  setState(() {});
+                }
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) =>
                         AdminLeaveScreen(leaveFormModel)));

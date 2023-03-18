@@ -15,6 +15,8 @@ class DataProvider with ChangeNotifier {
 
   EmployeeModel employeeModel = new EmployeeModel();
   List<LeaveFormModel> leaveList = [];
+  List<LeaveFormModel> isAdminReadUreadLeaveList = [];
+  List<LeaveFormModel> useNotificationLeaveList = [];
   bool isLoadingRequests = false;
 
   setEmployeeDetails(BuildContext context, employeeModel) {
@@ -41,14 +43,70 @@ class DataProvider with ChangeNotifier {
       if (docs.length > 0) {
         leaveList = List<LeaveFormModel>.from(
             docs.map((x) => LeaveFormModel.fromSnapshot(x)));
-
+        notifyListeners();
 
       } else if (docs.length == 0) {
         leaveList = [];
-
+        notifyListeners();
       }
+      notifyListeners();
     });
     return null;
   }
+
+  Future getAdminReadUnreadLeaveList() async {
+
+    isLoadingRequests = true;
+
+    List<DocumentSnapshot> docs;
+    DataRepo.leaveCollection.where("isAdminRead",isEqualTo: false).get().then((event) {
+
+      isLoadingRequests = false;
+
+
+      docs = event.docs;
+      if (docs.length > 0) {
+        isAdminReadUreadLeaveList = List<LeaveFormModel>.from(
+            docs.map((x) => LeaveFormModel.fromSnapshot(x)));
+        notifyListeners();
+
+      } else if (docs.length == 0) {
+        isAdminReadUreadLeaveList = [];
+        notifyListeners();
+      }
+      notifyListeners();
+    });
+    return null;
+  }
+
+
+
+
+
+  Future getUserNotificationLeaveList() async {
+
+    isLoadingRequests = true;
+
+    List<DocumentSnapshot> docs;
+    DataRepo.leaveCollection.where("status",isNotEqualTo: "Pending",).get().then((event) {
+
+      isLoadingRequests = false;
+
+
+      docs = event.docs;
+      if (docs.length > 0) {
+        useNotificationLeaveList = List<LeaveFormModel>.from(
+            docs.map((x) => LeaveFormModel.fromSnapshot(x)));
+        notifyListeners();
+
+      } else if (docs.length == 0) {
+        useNotificationLeaveList = [];
+        notifyListeners();
+      }
+      notifyListeners();
+    });
+    return null;
+  }
+
 
 }

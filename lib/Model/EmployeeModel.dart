@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:leave_management/Model/LeaveModel.dart';
 
 EmployeeModel employeeModelFromJson(String str) => EmployeeModel.fromJson(json.decode(str));
 
@@ -20,7 +19,6 @@ class EmployeeModel {
   String? marriageLeaveCount;
   String? sickLeaveCount;
   String? employeeId;
-  List<LeaveModel>? leaveList;
 
   EmployeeModel(
       {this.firstName,
@@ -34,15 +32,9 @@ class EmployeeModel {
         this.marriageLeaveCount,
         this.sickLeaveCount,
         this.employeeId,
-        this.leaveList
       });
 
   factory EmployeeModel.fromJson(Map<String, dynamic> json) {
-
-    List<LeaveModel> leaveModelList = null!=json["leaveList"] &&
-        json["leaveList"].length>0?
-    List<LeaveModel>.from(json["leaveList"].map((x) => LeaveModel.fromJson(x))):[];
-
 
     return EmployeeModel(
       firstName: json['firstName'],
@@ -56,7 +48,6 @@ class EmployeeModel {
       casualLeaveCount: json['casualLeaveCount'],
       marriageLeaveCount: json['marriageLeaveCount'],
       sickLeaveCount: json['sickLeaveCount'],
-      leaveList: leaveModelList,
     );
   }
 
@@ -72,7 +63,6 @@ class EmployeeModel {
     'marriageLeaveCount': marriageLeaveCount,
     'sickLeaveCount': sickLeaveCount,
     'employeeId': employeeId,
-    'leaveList': leaveList,
   };
   // static String encode(List<UserModel> userModelList) => json.encode(
   //   userModelList

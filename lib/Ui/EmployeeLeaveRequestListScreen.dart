@@ -118,14 +118,18 @@ class _EmployeeLeaveRequestListScreenState extends State<EmployeeLeaveRequestLis
                             padding: const EdgeInsets.only(right: 5.0),
                             child: Icon(leaveFormModel.status == "Pending"?
                                 Icons.access_time_outlined:
-                            leaveFormModel.status == "Accepted"?
+                            leaveFormModel.status == "Accept"?
                             Icons.check_circle_rounded:
                             Icons.warning),
                           ),
                           Text(
                             null != leaveFormModel.status
-                                ? leaveFormModel.status
-                                .toString()
+                                ?
+                            (leaveFormModel.status == "Accept"?
+                                "Accepted":
+                            leaveFormModel.status == "Reject"?
+                                "Rejected":
+                            leaveFormModel.status.toString())
                                 : "",
                             textAlign: TextAlign.start,
                             style:  TextStyle(color: Colors.black, fontSize: 15,
